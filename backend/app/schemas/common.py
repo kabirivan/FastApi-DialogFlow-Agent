@@ -1,7 +1,6 @@
 from typing import Generic, List, Optional, TypeVar
 from pydantic.generics import GenericModel
 from pydantic import BaseModel
-from app.schemas.role import IRoleRead
 
 DataType = TypeVar("DataType")
 
@@ -23,4 +22,4 @@ class IDeleteResponseBase(IResponseBase[DataType], Generic[DataType]):
     message: str = "Data deleted correctly"
 
 class IMetaGeneral(BaseModel):
-    roles: List[IRoleRead]
+    pass
