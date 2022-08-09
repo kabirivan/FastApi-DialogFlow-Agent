@@ -5,7 +5,7 @@ description = ""
 authors = ["xavier_aguas <aguas.xavier2013a@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10.6"
+python = ">=3.8,<3.10"
 alembic = "^1.7.6"
 asyncpg = "^0.25.0"
 fastapi = "^0.75.0"
