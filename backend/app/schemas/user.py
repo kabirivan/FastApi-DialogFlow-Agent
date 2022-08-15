@@ -8,6 +8,7 @@ class IUserCreate(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     password : Optional[str]
+    hashed_password : Optional[str]
     email: EmailStr
     is_superuser: bool = False
     role_id: Optional[UUID]
