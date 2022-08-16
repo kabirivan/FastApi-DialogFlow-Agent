@@ -58,7 +58,6 @@ async def search_agents(
 
     # Make the request
     response = await agents_client.search_agents(request=request)
-
     print('response', response.agents)
 
     agent_output = []
