@@ -1,7 +1,7 @@
 import asyncio
 from dataclasses import Field
 
-from google.cloud.dialogflow_v2 import AgentsClient, AgentsAsyncClient, SearchAgentsRequest, TrainAgentRequest, Agent
+from google.cloud.dialogflow_v2 import SetAgentRequest, AgentsAsyncClient, SearchAgentsRequest, TrainAgentRequest, Agent
 from fastapi import Body, APIRouter
 from typing import Any, List
 from pprint import pprint
@@ -19,22 +19,40 @@ async def create_agent(
     display_name: str = Body(...)
 ) -> Any:
 
-    agent_client = AgentsClient()
+    agent_client = AgentsAsyncClient()
 
     parent = agent_client.common_project_path(project_id)
 
-    pprint(vars(agent_client))
+    print(agent_client)
 
     agent = Agent(
         parent=parent,
         display_name=display_name,
-        default_language_code="en",
+        default_language_code="es-419",
         time_zone="America/Los_Angeles",
     )
 
-    response = agent_client.set_agent(request={"agent": agent})
+    request = SetAgentRequest(
+        agent=agent,
+    )
 
-    return IGetResponseBase(data=response)
+    # Make the request
+    response = await agent_client.set_agent(request=request)
+    print('response', response)
+
+    new_agent: IAgent = IAgent(
+            parent=response.parent, 
+            display_name=response.display_name, 
+            default_language_code=response.default_language_code, 
+            time_zone=response.time_zone, 
+            enable_logging=response.enable_logging,
+            match_mode=response.match_mode,
+            classification_threshold=response.classification_threshold,
+            api_version=response.api_version,
+            tier=response.tier
+            )
+
+    return IGetResponseBase(data=new_agent)
 
 
 async def printHello():
@@ -93,8 +111,14 @@ async def train_agent(
     operation = await agent_client.train_agent(request=request)
 
     print("Waiting for operation to complete...")
+    
 
-    response = operation.result()
 
-    # Handle the response
-    print('response', response)
+    response = await operation.done()
+
+    if response:
+        message = "The agent has been trained"
+    else:
+        message = "Something went wrong. Review your agent again."
+
+    return IGetResponseBase(message=message)
