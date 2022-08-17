@@ -28,7 +28,7 @@ async def create_agent(
     agent = Agent(
         parent=parent,
         display_name=display_name,
-        default_language_code="es-419",
+        default_language_code="en",
         time_zone="America/Los_Angeles",
     )
 
