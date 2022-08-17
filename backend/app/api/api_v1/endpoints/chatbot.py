@@ -1,13 +1,14 @@
 import asyncio
 from dataclasses import Field
 
-from google.cloud.dialogflow_v2 import SetAgentRequest, AgentsAsyncClient, SearchAgentsRequest, TrainAgentRequest, Agent
-from fastapi import Body, APIRouter
+from google.cloud.dialogflow_v2 import SetAgentRequest, AgentsAsyncClient, SearchAgentsRequest, TrainAgentRequest, Agent, DeleteAgentRequest
+from fastapi import Body, APIRouter, HTTPException
 from typing import Any, List
 from pprint import pprint
 
 from app.schemas.common import IGetResponseBase
-from ....schemas.agent import IAgent
+from app.schemas.common import IDeleteResponseBase
+from app.schemas.agent import IAgent
 
 router = APIRouter()
 
@@ -108,11 +109,7 @@ async def train_agent(
     )
 
     # Make the request
-    operation = await agent_client.train_agent(request=request)
-
-    print("Waiting for operation to complete...")
-    
-
+    operation = await agent_client.train_agent(request=request)    
 
     response = await operation.done()
 
@@ -122,3 +119,34 @@ async def train_agent(
         message = "Something went wrong. Review your agent again."
 
     return IGetResponseBase(message=message)
+
+
+
+@router.delete("/chatbot/delete/{project_id}", response_model=IDeleteResponseBase)
+async def delete_agent(
+    project_id: str = "mybotivantest", 
+) -> Any:
+    # Create a client
+    agent_client = AgentsAsyncClient()
+    parent = agent_client.common_project_path(project_id)
+
+    print('parent', parent)
+
+    request = SearchAgentsRequest(
+            parent=parent,
+        )
+    response = await agent_client.search_agents(request=request)
+
+    if len(response.agents) == 0:
+        raise HTTPException(status_code=400, detail="It doesn't exist an agent.")
+    
+    else:
+        # Initialize request argument(s)
+        request = DeleteAgentRequest(
+            parent=parent,
+        )
+
+        # Make the request
+        response = await agent_client.delete_agent(request=request)
+
+    return IDeleteResponseBase()
