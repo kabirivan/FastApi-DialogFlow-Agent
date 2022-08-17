@@ -135,3 +135,5 @@ pgadmin
 
 .sonarqube/*
 sonarqube
+
+/backend/my-service-account-bot.json
