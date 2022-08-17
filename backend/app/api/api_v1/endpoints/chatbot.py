@@ -1,9 +1,7 @@
 import asyncio
 from dataclasses import Field
 
-from google.cloud import dialogflow_v2
-from google.cloud.dialogflow_v2 import Agent
-from google.cloud.dialogflow_v2 import AgentsClient, AgentsAsyncClient, SearchAgentsRequest
+from google.cloud.dialogflow_v2 import AgentsClient, AgentsAsyncClient, SearchAgentsRequest, TrainAgentRequest, Agent
 from fastapi import Body, APIRouter
 from typing import Any, List
 from pprint import pprint
@@ -21,11 +19,11 @@ async def create_agent(
     display_name: str = Body(...)
 ) -> Any:
 
-    agents_client = AgentsClient()
+    agent_client = AgentsClient()
 
-    parent = agents_client.common_project_path(project_id)
+    parent = agent_client.common_project_path(project_id)
 
-    pprint(vars(agents_client))
+    pprint(vars(agent_client))
 
     agent = Agent(
         parent=parent,
@@ -34,7 +32,7 @@ async def create_agent(
         time_zone="America/Los_Angeles",
     )
 
-    response = agents_client.set_agent(request={"agent": agent})
+    response = agent_client.set_agent(request={"agent": agent})
 
     return IGetResponseBase(data=response)
 
@@ -48,8 +46,8 @@ async def search_agents(
     project_id: str = "mybotivantest", 
 ) -> Any:
 
-    agents_client = AgentsAsyncClient()
-    parent = agents_client.common_project_path(project_id)
+    agent_client = AgentsAsyncClient()
+    parent = agent_client.common_project_path(project_id)
 
     # Initialize request argument(s)
     request = SearchAgentsRequest(
@@ -57,7 +55,7 @@ async def search_agents(
     )
 
     # Make the request
-    response = await agents_client.search_agents(request=request)
+    response = await agent_client.search_agents(request=request)
     print('response', response.agents)
 
     agent_output = []
@@ -78,22 +76,25 @@ async def search_agents(
     return IGetResponseBase[List[IAgent]](data=agent_output)
 
 
-# @router.get("/chatbot/{project_id}", response_model=IGetResponseBase)
-# def train_agent():
-#     # Create a client
-#     client = dialogflow_v2.AgentsClient()
+@router.post("/chatbot/train/{project_id}", response_model=IGetResponseBase)
+async def train_agent(
+    project_id: str = "mybotivantest", 
+) -> Any:
+    # Create a client
+    agent_client = AgentsAsyncClient()
+    parent = agent_client.common_project_path(project_id)
 
-#     # Initialize request argument(s)
-#     request = dialogflow_v2.TrainAgentRequest(
-#         parent="parent_value",
-#     )
+    # Initialize request argument(s)
+    request = TrainAgentRequest(
+        parent=parent,
+    )
 
-#     # Make the request
-#     operation = client.train_agent(request=request)
+    # Make the request
+    operation = await agent_client.train_agent(request=request)
 
-#     print("Waiting for operation to complete...")
+    print("Waiting for operation to complete...")
 
-#     response = operation.result()
+    response = operation.result()
 
-#     # Handle the response
-#     print(response)
+    # Handle the response
+    print('response', response)
