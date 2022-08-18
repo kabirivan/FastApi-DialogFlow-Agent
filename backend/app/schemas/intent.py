@@ -44,23 +44,57 @@ class IQuickReplies(BaseModel):
     title: Optional[str]
     quick_replies: Optional[Sequence[str]]
 
+class IButton(BaseModel):
+    text: Optional[str]
+    postback: Optional[str]
+
 class ICard(BaseModel):
     title: Optional[str]
     subtitle: Optional[Sequence[str]]
     image_uri: Optional[str]
-    buttons: Optional[dialogflow_v2.types.Intent.Message.Card.Button]
+    buttons: Optional[Sequence[IButton]]
+
+class ISimpleResponse(BaseModel):
+    text_to_speech: Optional[str]
+    ssml: Optional[str]
+    display_text: Optional[str]
+
+class IBasicCard(BaseModel):
+    title: Optional[str]
+    subtitle: Optional[str]
+    formatted_text: Optional[str]
+    image: Optional[IImage]
+    buttons: Optional[Sequence[IButton]]
+
+class ISuggestion(BaseModel):
+    title: Optional[str]
+
+class ILinkOutSuggestion(BaseModel):
+    destination_name: Optional[str]
+    uri: Optional[str]
+
+class IItem(BaseModel):
+    info:
+    title: Optional[str]
+    description: Optional[str]
+    image: Optional[IImage]
+
+class IListSelect(BaseModel):
+    title: Optional[str]
+    items:
+    subtitle: Optional[str]
 
 class IMessage(BaseModel):
     text: Optional[Sequence[str]]
     image: Optional[IImage]
     quick_replies: Optional[IQuickReplies]
-    card: Optional[dialogflow_v2.types.Intent.Message.Card]
-    # payload:
-    # simple_responses:
-    # basic_card:
-    # suggestions:
-    # link_out_suggestion:
-    # list_select:
+    card: Optional[ICard]
+    payload: Optional[Any]
+    simple_responses: Optional[ISimpleResponse]
+    basic_card: Optional[IBasicCard]
+    suggestions: Optional[Sequence[ISuggestion]]
+    link_out_suggestion: Optional[ILinkOutSuggestion]
+    list_select: Optional[]
     # carousel_select:
     # browse_carousel_card:
     # table_card:
@@ -83,7 +117,7 @@ class IIntent(BaseModel):
     output_contexts: Optional[IContext]
     reset_contexts: Optional[bool]
     parameters: Optional[IParameter]
-    messages: Optional[dialogflow_v2.types.Intent.Message]
+    messages: Optional[IMessage]
     default_response_platforms: Optional[dialogflow_v2.types.Intent.Message.Platform]
     root_followup_intent_name: Optional[str]
     parent_followup_intent_name: Optional[str]
