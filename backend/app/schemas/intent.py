@@ -73,8 +73,12 @@ class ILinkOutSuggestion(BaseModel):
     destination_name: Optional[str]
     uri: Optional[str]
 
+class IInfo(BaseModel):
+    key: Optional[str]
+    synonyms: Optional[Sequence[str]]
+
 class IItem(BaseModel):
-    info:
+    info: Optional[IInfo]
     title: Optional[str]
     description: Optional[str]
     image: Optional[IImage]
