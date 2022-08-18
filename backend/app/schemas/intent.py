@@ -85,8 +85,25 @@ class IItem(BaseModel):
 
 class IListSelect(BaseModel):
     title: Optional[str]
-    items:
+    items: Optional[Sequence[IItem]]
     subtitle: Optional[str]
+
+class ICarouselSelect(BaseModel):
+    items: Optional[Sequence[IItem]]
+
+
+cla
+
+class IBrowseCarouselCardItem(BaseModel):
+    open_uri_action: Optional[dialogflow_v2.types.Intent.Message.BrowseCarouselCard.BrowseCarouselCardItem.OpenUrlAction]
+    title: Optional[str]
+    description: Optional[str]
+    image: Optional[IImage]
+    footer: Optional[str]
+
+class IBrowseCarouselCard(BaseModel):
+    items: Optional[Sequence[IBrowseCarouselCardItem]]
+    image_display_options: Optional[dialogflow_v2.types.Intent.Message.BrowseCarouselCard.ImageDisplayOptions]
 
 class IMessage(BaseModel):
     text: Optional[Sequence[str]]
@@ -98,9 +115,9 @@ class IMessage(BaseModel):
     basic_card: Optional[IBasicCard]
     suggestions: Optional[Sequence[ISuggestion]]
     link_out_suggestion: Optional[ILinkOutSuggestion]
-    list_select: Optional[]
-    # carousel_select:
-    # browse_carousel_card:
+    list_select: Optional[IListSelect]
+    carousel_select: Optional[ICarouselSelect]
+    browse_carousel_card: Optional[IBrowseCarouselCardItem]
     # table_card:
     # media_content:
     # platform:
