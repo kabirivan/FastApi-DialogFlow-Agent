@@ -1,4 +1,5 @@
 
+from optparse import Option
 from pydantic import BaseModel
 from typing import Any, Optional, Sequence
 from google.cloud import dialogflow_v2
@@ -34,6 +35,37 @@ class IParameter(BaseModel):
     prompts:Optional[Sequence[str]]
     is_list: Optional[bool]
 
+
+class IImage(BaseModel):
+    image_uri: Optional[str]
+    accessibility_text: Optional[str]
+
+class IQuickReplies(BaseModel):
+    title: Optional[str]
+    quick_replies: Optional[Sequence[str]]
+
+class ICard(BaseModel):
+    title: Optional[str]
+    subtitle: Optional[Sequence[str]]
+    image_uri: Optional[str]
+    buttons: Optional[dialogflow_v2.types.Intent.Message.Card.Button]
+
+class IMessage(BaseModel):
+    text: Optional[Sequence[str]]
+    image: Optional[IImage]
+    quick_replies: Optional[IQuickReplies]
+    card: Optional[dialogflow_v2.types.Intent.Message.Card]
+    # payload:
+    # simple_responses:
+    # basic_card:
+    # suggestions:
+    # link_out_suggestion:
+    # list_select:
+    # carousel_select:
+    # browse_carousel_card:
+    # table_card:
+    # media_content:
+    # platform:
 
 class IIntent(BaseModel):
     name: Optional[str]
