@@ -2,9 +2,9 @@
 from google.cloud.dialogflow_v2 import IntentsAsyncClient, Intent, GetAgentRequest, AgentsAsyncClient, CreateIntentRequest, GetIntentRequest, ListIntentsRequest
 from pprint import pprint
 from fastapi import Body, APIRouter, HTTPException, Query
-from typing import Any, List
+from typing import Any, List, Sequence
 from app.schemas.common import IGetResponseBase
-from ....schemas.intent import IIntent
+from ....schemas.intent import IIntent, ITrainingPhrases
 from ....schemas.common import IPostResponseBase
 
 from google.protobuf.json_format import MessageToDict
@@ -42,7 +42,8 @@ async def get_intent_list(
 @router.post("/intent/create/{project_id}", response_model=IPostResponseBase)
 async def create_intent(
     project_id: str = "mybotivantest",
-    display_name: str = Body(default="greet") 
+    display_name: str = Body(default="greet"),
+    training_phrases_parts: Sequence[ITrainingPhrases] = Body(...)
 ) -> Any:
     # Create a client
     agent_client = AgentsAsyncClient()
@@ -59,7 +60,11 @@ async def create_intent(
     if response:
         intent_agent_client = IntentsAsyncClient()
 
-        print(intent_agent_client.common_project_path(project_id)) 
+        print(intent_agent_client.common_project_path(project_id))
+
+        training_phrases = []
+        for training_phrases_part in training_phrases_parts:
+            print(training_phrases_part)
 
         # Initialize request argument(s)
         intent = Intent()
@@ -77,7 +82,7 @@ async def create_intent(
     return IPostResponseBase(data=new_response)
 
 
-@router.post("/intent/{project_id}", response_model=IGetResponseBase)
+@router.get("/intent/{project_id}", response_model=IGetResponseBase)
 async def get_intent(
     project_id: str = "mybotivantest",
     intent_id:  str = Query(default="211e670d-7944-43eb-9aed-a41beab1ba2b", description="ID Intent"),
