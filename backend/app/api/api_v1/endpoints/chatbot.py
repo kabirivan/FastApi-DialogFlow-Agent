@@ -8,9 +8,11 @@ from pprint import pprint
 
 from app.schemas.common import IGetResponseBase
 from app.schemas.common import IDeleteResponseBase
-from app.schemas.agent import IAgent
+from app.schemas.common import IPostResponseBase
+
 
 from google.protobuf.json_format import MessageToDict
+
 
 router = APIRouter()
 
@@ -77,7 +79,7 @@ async def search_agents(
     return IGetResponseBase(data=agent_output)
 
 
-@router.post("/chatbot/train/{project_id}", response_model=IGetResponseBase)
+@router.post("/chatbot/train/{project_id}", response_model=IPostResponseBase)
 async def train_agent(
     project_id: str = "mybotivantest", 
 ) -> Any:
@@ -100,7 +102,7 @@ async def train_agent(
     else:
         message = "Something went wrong. Review your agent again."
 
-    return IGetResponseBase(message=message)
+    return IPostResponseBase(message=message)
 
 
 
