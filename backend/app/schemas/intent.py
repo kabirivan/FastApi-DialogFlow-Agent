@@ -92,10 +92,12 @@ class ICarouselSelect(BaseModel):
     items: Optional[Sequence[IItem]]
 
 
-cla
+class IOpenUrlAction(BaseModel):
+    url: Optional[str]
+    url_type_hint: Optional[dialogflow_v2.types.Intent.Message.BrowseCarouselCard.BrowseCarouselCardItem.OpenUrlAction.UrlTypeHint]
 
 class IBrowseCarouselCardItem(BaseModel):
-    open_uri_action: Optional[dialogflow_v2.types.Intent.Message.BrowseCarouselCard.BrowseCarouselCardItem.OpenUrlAction]
+    open_uri_action: Optional[IOpenUrlAction]
     title: Optional[str]
     description: Optional[str]
     image: Optional[IImage]
@@ -104,6 +106,40 @@ class IBrowseCarouselCardItem(BaseModel):
 class IBrowseCarouselCard(BaseModel):
     items: Optional[Sequence[IBrowseCarouselCardItem]]
     image_display_options: Optional[dialogflow_v2.types.Intent.Message.BrowseCarouselCard.ImageDisplayOptions]
+
+
+class IColumnProperties(BaseModel):
+    header: Optional[str]
+    horizontal_alignment: Optional[dialogflow_v2.types.Intent.Message.ColumnProperties.HorizontalAlignment]
+
+
+class ITableCardCell(BaseModel):
+    text: Optional[str]
+
+class ITableCardRow(BaseModel):
+    cells: Optional[Sequence[ITableCardCell]]
+    divider_after: Optional[bool]
+
+class ITableCard(BaseModel):
+    title: Optional[str]
+    subtitle: Optional[str]
+    image: Optional[IImage]
+    column_properties: Optional[Sequence[IColumnProperties]]
+    rows: Optional[ITableCardRow]
+    buttons: Optional[Sequence[IButton]]
+
+
+class IResponseMediaObject(BaseModel):
+    name: Optional[str]
+    description: Optional[str]
+    large_image: Optional[IImage]
+    icon: Optional[IImage]
+    content_url: Optional[str]
+
+class IMediaContent(BaseModel):
+    media_type: Optional[dialogflow_v2.types.Intent.Message.MediaContent.ResponseMediaType]
+    media_objects: Optional[Sequence[IResponseMediaObject]]
+
 
 class IMessage(BaseModel):
     text: Optional[Sequence[str]]
@@ -118,9 +154,9 @@ class IMessage(BaseModel):
     list_select: Optional[IListSelect]
     carousel_select: Optional[ICarouselSelect]
     browse_carousel_card: Optional[IBrowseCarouselCardItem]
-    # table_card:
-    # media_content:
-    # platform:
+    table_card: Optional[ITableCard]
+    media_content: Optional[IMediaContent]
+    platform: Optional[dialogflow_v2.types.Intent.Message.Platform]
 
 class IIntent(BaseModel):
     name: Optional[str]
@@ -142,7 +178,7 @@ class IIntent(BaseModel):
     default_response_platforms: Optional[dialogflow_v2.types.Intent.Message.Platform]
     root_followup_intent_name: Optional[str]
     parent_followup_intent_name: Optional[str]
-    followup_intent_info: Optional[dialogflow_v2.types.Intent.FollowupIntentInfo]
+    # followup_intent_info: Optional[dialogflow_v2.types.Intent.FollowupIntentInfo]
 
 
 

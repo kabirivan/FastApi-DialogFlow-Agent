@@ -17,3 +17,4 @@ class IAgent(BaseModel):
     classification_threshold: float
     api_version: dialogflow_v2.types.Agent.ApiVersion
     tier: dialogflow_v2.types.Agent.Tier
+

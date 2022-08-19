@@ -6,9 +6,11 @@ from app.schemas.common import IGetResponseBase
 from ....schemas.intent import IIntent
 from ....schemas.common import IPostResponseBase
 
+from google.protobuf.json_format import MessageToDict
+
 router = APIRouter()
 
-@router.post("/intent/create/{project_id}", response_model=IPostResponseBase[IIntent])
+@router.post("/intent/create/{project_id}", response_model=IPostResponseBase)
 async def create_intent(
     project_id: str = "mybotivantest",
     display_name: str = Body(default="greet") 
@@ -45,4 +47,6 @@ async def create_intent(
         # Handle the response
         print(response)
 
-    return IPostResponseBase[IIntent](data=response)
+        new_response = MessageToDict(response._pb)
+
+    return IPostResponseBase(data=new_response)

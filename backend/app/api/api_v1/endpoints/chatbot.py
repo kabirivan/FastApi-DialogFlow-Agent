@@ -10,6 +10,8 @@ from app.schemas.common import IGetResponseBase
 from app.schemas.common import IDeleteResponseBase
 from app.schemas.agent import IAgent
 
+from google.protobuf.json_format import MessageToDict
+
 router = APIRouter()
 
 
@@ -23,8 +25,6 @@ async def create_agent(
     agent_client = AgentsAsyncClient()
 
     parent = agent_client.common_project_path(project_id)
-
-    print(agent_client)
 
     agent = Agent(
         parent=parent,
@@ -41,19 +41,10 @@ async def create_agent(
     response = await agent_client.set_agent(request=request)
     print('response', response)
 
-    new_agent: IAgent = IAgent(
-            parent=response.parent, 
-            display_name=response.display_name, 
-            default_language_code=response.default_language_code, 
-            time_zone=response.time_zone, 
-            enable_logging=response.enable_logging,
-            match_mode=response.match_mode,
-            classification_threshold=response.classification_threshold,
-            api_version=response.api_version,
-            tier=response.tier
-            )
+    new_response = MessageToDict(response._pb)
 
-    return IGetResponseBase(data=new_agent)
+
+    return IGetResponseBase(data=new_response)
 
 
 async def printHello():
