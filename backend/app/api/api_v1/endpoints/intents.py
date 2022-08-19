@@ -1,4 +1,6 @@
 
+from ast import alias
+from pydoc import text
 from google.cloud.dialogflow_v2 import IntentsAsyncClient, Intent, GetAgentRequest, AgentsAsyncClient, CreateIntentRequest, GetIntentRequest, ListIntentsRequest
 from pprint import pprint
 from fastapi import Body, APIRouter, HTTPException, Query
@@ -60,15 +62,21 @@ async def create_intent(
     if response:
         intent_agent_client = IntentsAsyncClient()
 
-        print(intent_agent_client.common_project_path(project_id))
+        print(training_phrases_parts)
 
         training_phrases = []
         for training_phrases_part in training_phrases_parts:
-            print(training_phrases_part)
+            print(training_phrases_part.parts[0])
+            part = Intent.TrainingPhrase.Part(text=training_phrases_part.parts[0].text, entity_type=training_phrases_part.parts[0].entity_type, alias=training_phrases_part.parts[0].alias, user_defined=training_phrases_part.parts[0].user_defined)
+            training_phrase = Intent.TrainingPhrase(parts=[part])
+            training_phrases.append(training_phrase)
+
+        # print('training_phrases', training_phrases)
 
         # Initialize request argument(s)
         intent = Intent()
         intent.display_name = display_name
+        intent.training_phrases = training_phrases
 
         request = CreateIntentRequest(
             parent=f"projects/{project_id}/agent",
