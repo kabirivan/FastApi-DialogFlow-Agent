@@ -15,7 +15,7 @@ class IPart(BaseModel):
 class ITrainingPhrases(BaseModel):
     name: Optional[str]
     type_: Optional[dialogflow_v2.types.Intent.TrainingPhrase.Type]
-    parts: Optional[IPart]
+    parts: Optional[Sequence[IPart]]
     times_added_count: Optional[int]
 
 
