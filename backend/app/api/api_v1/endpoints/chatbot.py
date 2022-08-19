@@ -51,7 +51,7 @@ async def printHello():
     await asyncio.sleep(1)  # do something
     print('hello')
 
-@router.get("/chatbot/{project_id}", response_model=IGetResponseBase[List[IAgent]])
+@router.get("/chatbot/{project_id}", response_model=IGetResponseBase)
 async def search_agents(
     project_id: str = "mybotivantest", 
 ) -> Any:
@@ -70,20 +70,11 @@ async def search_agents(
 
     agent_output = []
     for agent in response.agents:
-        new_agent: IAgent = IAgent(
-            parent=agent.parent, 
-            display_name=agent.display_name, 
-            default_language_code=agent.default_language_code, 
-            time_zone=agent.time_zone, 
-            enable_logging=agent.enable_logging,
-            match_mode=agent.match_mode,
-            classification_threshold=agent.classification_threshold,
-            api_version=agent.api_version,
-            tier=agent.tier
-            )
+
+        new_agent = MessageToDict(agent._pb)
         agent_output.append(new_agent)
 
-    return IGetResponseBase[List[IAgent]](data=agent_output)
+    return IGetResponseBase(data=agent_output)
 
 
 @router.post("/chatbot/train/{project_id}", response_model=IGetResponseBase)

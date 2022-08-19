@@ -43,10 +43,6 @@ async def create_intent(
 
         # Make the request
         response = await intent_agent_client.create_intent(request=request)
-
-        # Handle the response
-        print(response)
-
         new_response = MessageToDict(response._pb)
 
     return IPostResponseBase(data=new_response)
