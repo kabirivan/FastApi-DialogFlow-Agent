@@ -13,7 +13,7 @@ from google.protobuf.json_format import MessageToDict
 
 router = APIRouter()
 
-@router.post("/intent/list/{project_id}", response_model=IGetResponseBase)
+@router.get("/intent/list/{project_id}", response_model=IGetResponseBase)
 async def get_intent_list(
     project_id: str = "mybotivantest",
 ) -> Any:
