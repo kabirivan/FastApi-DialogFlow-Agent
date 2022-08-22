@@ -67,27 +67,31 @@ async def create_intent(
         training_phrases = []
         for training_phrases_part in training_phrases_parts:
             print(training_phrases_part.parts[0])
-            part = Intent.TrainingPhrase.Part(text=training_phrases_part.parts[0].text, entity_type=training_phrases_part.parts[0].entity_type, alias=training_phrases_part.parts[0].alias, user_defined=training_phrases_part.parts[0].user_defined)
-            training_phrase = Intent.TrainingPhrase(parts=[part])
+            parts = training_phrases_part.parts
+            new_parts = []
+            for part in parts:
+                new_part = Intent.TrainingPhrase.Part(text=part.text, entity_type=part.entity_type, alias=part.alias, user_defined=part.user_defined)
+                new_parts.append(new_part)
+            training_phrase = Intent.TrainingPhrase(parts=new_parts)
             training_phrases.append(training_phrase)
 
-        # print('training_phrases', training_phrases)
+        print('training_phrases', training_phrases)
 
         # Initialize request argument(s)
-        intent = Intent()
-        intent.display_name = display_name
-        intent.training_phrases = training_phrases
+    #     intent = Intent()
+    #     intent.display_name = display_name
+    #     intent.training_phrases = training_phrases
 
-        request = CreateIntentRequest(
-            parent=f"projects/{project_id}/agent",
-            intent=intent,
-        )
+    #     request = CreateIntentRequest(
+    #         parent=f"projects/{project_id}/agent",
+    #         intent=intent,
+    #     )
 
-        # Make the request
-        response = await intent_agent_client.create_intent(request=request)
-        new_response = MessageToDict(response._pb)
+    #     # Make the request
+    #     response = await intent_agent_client.create_intent(request=request)
+    #     new_response = MessageToDict(response._pb)
 
-    return IPostResponseBase(data=new_response)
+    # return IPostResponseBase(data=new_response)
 
 
 @router.get("/intent/{project_id}", response_model=IGetResponseBase)
