@@ -78,20 +78,20 @@ async def create_intent(
         print('training_phrases', training_phrases)
 
         # Initialize request argument(s)
-    #     intent = Intent()
-    #     intent.display_name = display_name
-    #     intent.training_phrases = training_phrases
+        intent = Intent()
+        intent.display_name = display_name
+        intent.training_phrases = training_phrases
 
-    #     request = CreateIntentRequest(
-    #         parent=f"projects/{project_id}/agent",
-    #         intent=intent,
-    #     )
+        request = CreateIntentRequest(
+            parent=f"projects/{project_id}/agent",
+            intent=intent,
+        )
 
-    #     # Make the request
-    #     response = await intent_agent_client.create_intent(request=request)
-    #     new_response = MessageToDict(response._pb)
+        # Make the request
+        response = await intent_agent_client.create_intent(request=request)
+        new_response = MessageToDict(response._pb)
 
-    # return IPostResponseBase(data=new_response)
+    return IPostResponseBase(data=new_response)
 
 
 @router.get("/intent/{project_id}", response_model=IGetResponseBase)
@@ -110,6 +110,7 @@ async def get_intent(
 
     # Make the request
     response = await intent_agent_client.get_intent(request=request)
+    print('response', response.training_phrases)
     new_response = MessageToDict(response._pb)
 
     # Handle the response
