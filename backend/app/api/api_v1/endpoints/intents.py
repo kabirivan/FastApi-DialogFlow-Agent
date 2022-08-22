@@ -128,7 +128,12 @@ async def delete_intent(
 
     intent_path = intent_agent_client.intent_path(project_id, intent_id)
     print('intent_path', intent_path)
+    try:    
+        response = await intent_agent_client.delete_intent(request={"name": intent_path})
+        print('response', response)
+        return IDeleteResponseBase(message="Intent deleted")
 
-    response = await intent_agent_client.delete_intent(request={"name": intent_path})
+    except:
+        raise HTTPException(status_code=400, detail="It doesn't exist this intent.")
 
-    print('response', response)
+    
