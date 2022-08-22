@@ -7,7 +7,7 @@ from fastapi import Body, APIRouter, HTTPException, Query
 from typing import Any, List, Sequence
 from app.schemas.common import IGetResponseBase
 from ....schemas.intent import IIntent, ITrainingPhrases
-from ....schemas.common import IPostResponseBase
+from ....schemas.common import IDeleteResponseBase, IPostResponseBase
 
 from google.protobuf.json_format import MessageToDict
 
@@ -115,4 +115,18 @@ async def get_intent(
 
     # Handle the response
     return IGetResponseBase(data=new_response)
+
+
+@router.delete("/intent/{project_id}", response_model=IDeleteResponseBase)
+async def delete_intent(
+    project_id: str = "mybotivantest",
+    intent_id:  str = Query(default="cf62c5d8-2099-46aa-a0a0-9ccdec85ab81", description="ID Intent")
+) -> Any:
+    """Delete intent with the given intent type and intent value."""
+
+    intent_agent_client = IntentsAsyncClient()
+
+    intent_path = intent_agent_client.intent_path(project_id, intent_id)
+
+    # intents_client.delete_intent(request={"name": intent_path})
 
