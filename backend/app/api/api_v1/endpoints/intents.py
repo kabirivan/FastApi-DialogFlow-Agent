@@ -97,7 +97,7 @@ async def create_intent(
 @router.get("/intent/{project_id}", response_model=IGetResponseBase)
 async def get_intent(
     project_id: str = "mybotivantest",
-    intent_id:  str = Query(default="211e670d-7944-43eb-9aed-a41beab1ba2b", description="ID Intent"),
+    intent_id:  str = Query(default="cf62c5d8-2099-46aa-a0a0-9ccdec85ab81", description="ID Intent"),
 ) -> Any:
 
     # Create a client
