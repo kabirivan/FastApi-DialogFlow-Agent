@@ -127,6 +127,8 @@ async def delete_intent(
     intent_agent_client = IntentsAsyncClient()
 
     intent_path = intent_agent_client.intent_path(project_id, intent_id)
+    print('intent_path', intent_path)
 
-    # intents_client.delete_intent(request={"name": intent_path})
+    response = await intent_agent_client.delete_intent(request={"name": intent_path})
 
+    print('response', response)
