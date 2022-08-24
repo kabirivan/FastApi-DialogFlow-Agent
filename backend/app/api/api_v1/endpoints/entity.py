@@ -13,7 +13,7 @@ from google.protobuf.json_format import MessageToDict
 
 router = APIRouter()
 
-@router.get("/intent/list/{project_id}", response_model=IGetResponseBase)
+@router.get("/entity/list/{project_id}", response_model=IGetResponseBase)
 async def get_intent_list(
     project_id: str = "mybotivantest",
 ) -> Any:
@@ -29,8 +29,8 @@ async def get_intent_list(
 
     # Make the request
     entity_agent_client = EntityTypesAsyncClient()
-    response = await entity_agent_client.list_intents(request=request)
-    print('response', response)
+    response = await entity_agent_client.list_entity_types(request=request)
+    print('response', response._response)
 
     # intent_output = []
     # for intent in intents:
